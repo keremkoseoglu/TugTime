@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>TUG Time</title>
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  	<script src="jquery/jquery.js"></script>
+  	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<script src="enumerator.js"></script>
+	<script src="entry.js"></script>
+	<script src="timesheet.js"></script>
+	<script src="sumEntry.js"></script>
+	<script src="flushResult.js"></script>
+	<script src="sumTimesheet.js"></script>
+	<script src="jira.js"></script>
+	<script src="controller.js"></script>
+</head>
+<body>
+
+	<script>
+		var num = new Enumerator();
+		var tim = new TimeSheet();
+		var st = new SumTimeSheet();
+		var proj = new SumTimeSheet();
+		var flush = new SumTimeSheet();
+		var jira = new Jira();
+		var cont = new Controller();
+		
+		$( document ).ready( function () {
+			tim.loadFromLocalStorage();
+			num.setCurrent(tim.getMaxId());
+			st.build(tim);
+			cont.paintAll(tim, st);
+			cont.loadCurrentEntryFromLocalStorage();
+		} );
+	</script>
+	
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="http://www.dummydomain.com" target="_blank">TUG Time</a>
+        </div>
+      </div>
+    </nav>
+	
+	<div class="container" role="main">
+		
+		<div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Entry</h3>
+            </div>
+            <div class="panel-body">
+				<div class="row">
+					<div class="col-md-1"><label for="input_id">ID</label></div>
+					<div class="col-md-11"><input type="text" id="input_id" readonly></div>
+				</div>
+				<div class="row">
+					<div class="col-md-1"><label for="input_har">Issue</label></div>
+					<div class="col-md-11"><input type="text" id="input_har">&nbsp;<span id="input_har_txt"></span></div>
+				</div>
+				<div class="row">
+					<div class="col-md-1"><label for="input_begin">Interval</label></div>
+					<div class="col-md-11"><input type="text" id="input_begin"> - <input type="text" id="input_end"></div>
+				</div>
+				<br>
+				<p>
+					<button class="btn btn-sm btn-success" onclick="cont.startTimer();"><span class="glyphicon glyphicon-play"></span></button>
+					<button class="btn btn-sm btn-danger" onclick="cont.stopTimer();"><span class="glyphicon glyphicon-stop"></span></button>
+					<button class="btn btn-sm btn-default" onclick="cont.addEntry(num, tim, st);"><span class="glyphicon glyphicon-eject"></span></button>
+				</p>
+            </div>
+         </div>
+		
+		<hr>
+		
+
+			
+		<div class="panel panel-default">
+	           <div class="panel-heading">
+	             <h3 class="panel-title">Timesheet</h3>
+	           </div>
+	           <div class="panel-body">
+				<p id="timesheet"></p>
+				<button class="btn btn-sm btn-default" onclick="cont.clearTimesheet(tim, st, flush, num);"><span class="glyphicon glyphicon-trash"></span></button>
+	           </div>
+	     </div>
+		
+		<hr>
+		
+		<div class="row">
+			<div class="col-md-4">
+				<div class="panel panel-default">
+		            <div class="panel-heading">
+		              <h3 class="panel-title">Summary</h3>
+		            </div>
+		            <div class="panel-body">
+						<p id="summary"></p>
+						<button class="btn btn-sm btn-default" onclick="cont.flush(st, proj, flush);"><span class='glyphicon glyphicon-time'></span></button>
+		            </div>
+	          	</div>
+			</div>
+			<div class="col-md-4">
+				<div class="panel panel-default">
+		            <div class="panel-heading">
+		              <h3 class="panel-title">Project Summary</h3>
+		            </div>
+		            <div class="panel-body">
+						<p id="project"></p>
+		            </div>
+		         </div>
+			</div>
+			<div class="col-md-4">
+				<div class="panel panel-default">
+		            <div class="panel-heading">
+		              <h3 class="panel-title">Flush</h3>
+		            </div>
+		            <div class="panel-body">
+						<p id="flush"></p>
+		            </div>
+		         </div>
+			</div>
+		</div>
+		
+		<hr>
+		
+		<footer><p>
+		written by <a href="http://kerem.koseoglu.info" target="_blank">Dr. Kerem Koseoglu</a>
+		</p></footer>
+	
+	</div>
+	
+	
+	
+</body>
+</html>
